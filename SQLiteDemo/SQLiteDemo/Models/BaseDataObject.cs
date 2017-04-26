@@ -1,4 +1,5 @@
 ﻿using System;
+using SQLite;
 using SQLiteDemo.Helpers;
 
 namespace SQLiteDemo.Models
@@ -13,6 +14,7 @@ namespace SQLiteDemo.Models
         /// <summary>
         /// Id for item
         /// </summary>
+        [PrimaryKey]
         public string Id { get; set; }
 
         /// <summary>

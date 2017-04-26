@@ -14,12 +14,15 @@ namespace SQLiteDemo.ViewModels
     {
         public ObservableRangeCollection<Item> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
-
+        public Command DeleteCommand { get; set; }
         public ItemsViewModel()
         {
             Title = "Browse";
             Items = new ObservableRangeCollection<Item>();
+
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+
+            DeleteCommand = new Command<Item>(DelteItem);
 
             MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
             {
@@ -27,6 +30,16 @@ namespace SQLiteDemo.ViewModels
                 Items.Add(_item);
                 await DataStore.AddItemAsync(_item);
             });
+        }
+
+        private async void DelteItem(Item item)
+        {
+            var confirm = await App.Current.MainPage.DisplayAlert("Delete item", "Are you sure?", "Delete it", "Cancel");
+            if(!confirm)return;
+
+            await DataStore.DeleteItemAsync(item);
+
+            await ExecuteLoadItemsCommand();
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -39,7 +52,7 @@ namespace SQLiteDemo.ViewModels
             try
             {
                 Items.Clear();
-                var items = await DataStore.GetItemsAsync(true);
+                var items = await DataStore.GetItemsAsync();
                 Items.ReplaceRange(items);
             }
             catch (Exception ex)
