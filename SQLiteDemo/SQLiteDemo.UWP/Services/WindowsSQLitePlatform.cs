@@ -3,7 +3,9 @@ using Windows.Storage;
 using SQLite;
 using SQLiteDemo.Services;
 using SQLiteDemo.UWP.Services;
+
 [assembly: Xamarin.Forms.Dependency(typeof(WindowsSQLitePlatform))]
+
 namespace SQLiteDemo.UWP.Services
 {
     public class WindowsSQLitePlatform: ISQLitePlatform
